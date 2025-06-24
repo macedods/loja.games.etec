@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stark Games - Tecnologia em Entretenimento</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Montserrat:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        /* Cores Base Universo Marvel / Homem de Ferro */
+        :root {
+            --cor-primaria-stark: #e62129; /* Vermelho vibrante do Homem de Ferro */
+            --cor-secundaria-stark: #ffd700; /* Dourado metálico */
+            --cor-fundo-stark: #1a1a1d; /* Preto/cinza escuro, base tecnológica */
+            --cor-texto-claro: #e0e0e0;
+            --cor-texto-medio: #b0b0b0;
+            --cor-borda-tecnologica: #3a3a40; /* Cinza para bordas e divisores */
+            --cor-destaque-ui: #00ffff; /* Ciano para elementos de UI/JARVIS */
+            --cor-sucesso: #28a745;
+            --cor-erro: #dc3545;
+            --cor-gradiente-um: #2e0c0c; /* Escuro para gradiente */
+            --cor-gradiente-dois: #1a1a1d; /* Escuro para gradiente */
+        }
+
+        /* Fontes */
+        body {
+            font-family: 'Montserrat', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, var(--cor-gradiente-um), var(--cor-fundo-stark));
+            color: var(--cor-texto-claro);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden; /* Evita scroll horizontal */
+        }
+
+        h1, h2, h3, h4 {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--cor-secundaria-stark);
+            text-shadow: 0 0 8px rgba(255, 215, 0, 0.4);
+            letter-spacing: 1.5px;
+        }
+
+        /* Layout Geral */
+        header {
+            background: linear-gradient(to right, var(--cor-primaria-stark), #a01c20);
+            color: var(--cor-texto-claro);
+            padding: 1.5rem 0;
+            text-align: center;
+            border-bottom: 4px solid var(--cor-secundaria-stark);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.5);
+            position: relative;
+            z-index: 100;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 3rem;
+            text-transform: uppercase;
+            color: var(--cor-texto-claro);
+            animation: fadeInHeader 1.5s ease-out;
+        }
+
+        header p {
+            font-size: 1.1rem;
+            margin-top: 0.5rem;
+            color: var(--cor-texto-medio);
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 2.5rem auto;
+            padding: 0 2rem;
+            display: grid;
+            grid-template-columns: 3fr 1fr;
+            gap: 2.5rem;
+            flex-grow: 1;
+        }
+
+        /* Seção de Produtos */
+        .secao-produtos {
+            background-color: rgba(30, 30, 35, 0.85); /* Fundo semi-transparente */
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.6);
+            border: 1px solid var(--cor-borda-tecnologica);
+        }
+
+        .secao-produtos h2 {
+            margin-top: 0;
+            margin-bottom: 2rem;
+            text-align: center;
+            font-size: 2.2rem;
+            border-bottom: 2px solid var(--cor-destaque-ui);
+            padding-bottom: 1rem;
+        }
+
+        .produtos-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .produto-card {
+            background-color: #2a2a30;
+            border: 1px solid var(--cor-borda-tecnologica);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out, border-color 0.3s ease-in-out;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .produto-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border-radius: 10px;
+            border: 2px solid transparent;
+            background: linear-gradient(45deg, var(--cor-destaque-ui), var(--cor-secundaria-stark)) border-box;
+            -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+        }
+
+        .produto-card:hover::before {
+            opacity: 1;
+        }
+
+        .produto-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6);
+        }
+
+        .produto-card img {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+            display: block;
+            border-bottom: 1px solid var(--cor-borda-tecnologica);
+        }
+
+        .produto-info {
+            padding: 1.5rem;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .produto-info h3 {
+            margin-top: 0;
+            margin-bottom: 0.8rem;
+            font-size: 1.6rem;
+            color: var(--cor-secundaria-stark);
+        }
+
+        .produto-info p {
+            font-size: 1rem;
+            color: var(--cor-texto-medio);
+            margin-bottom: 1.2rem;
+            flex-grow: 1;
+        }
+
+        .produto-preco {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--cor-destaque-ui);
+            margin-bottom: 1.5rem;
+            text-align: right;
+            text-shadow: 0 0 5px rgba(0, 255, 255, 0.5);
+        }
+
+        .btn-add-carrinho {
+            background-color: var(--cor-primaria-stark);
+            color: var(--cor-texto-claro);
+            border: none;
+            padding: 1rem 1.5rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: bold;
+            transition: background-color 0.3s ease, transform 0.1s ease-in-out;
+            width: 100%;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-add-carrinho:hover {
+            background-color: #ff3a42;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .btn-add-carrinho:active {
+            transform: translateY(0);
+        }
+
+        /* Seção do Carrinho */
+        .carrinho {
+            background-color: rgba(30, 30, 35, 0.85);
+            border: 1px solid var(--cor-borda-tecnologica);
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.6);
+            height: fit-content;
+            position: sticky;
+            top: 2.5rem;
+            animation: fadeInRight 1s ease-out;
+        }
+
+        .carrinho h2 {
+            margin-top: 0;
+            margin-bottom: 2rem;
+            text-align: center;
+            font-size: 2rem;
+            border-bottom: 2px solid var(--cor-destaque-ui);
+            padding-bottom: 1rem;
+        }
+
+        #lista-carrinho {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 2rem 0;
+        }
+
+        .item-carrinho {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem 0;
+            border-bottom: 1px dashed var(--cor-borda-tecnologica);
+            font-size: 1rem;
+            position: relative;
+            opacity: 0; /* Para animação de entrada */
+            transform: translateX(-20px); /* Para animação de entrada */
+            animation: slideInItem 0.4s forwards ease-out;
+        }
+        .item-carrinho:last-child {
+            border-bottom: none;
+        }
+
+        .item-carrinho .item-info span {
+            display: block;
+        }
+
+        .item-carrinho .item-info .item-nome {
+            font-weight: bold;
+            color: var(--cor-destaque-ui);
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.1rem;
+        }
+
+        .item-carrinho .item-info .item-preco-unitario {
+            font-size: 0.9rem;
+            color: var(--cor-texto-medio);
+        }
+
+        .item-carrinho .item-controles {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .item-carrinho .item-controles button {
+            background-color: var(--cor-primaria-stark);
+            color: var(--cor-texto-claro);
+            border: none;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%; /* Botões redondos */
+            cursor: pointer;
+            font-size: 1.2rem;
+            font-weight: bold;
+            transition: background-color 0.3s ease, transform 0.1s ease;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .item-carrinho .item-controles button:hover {
+            background-color: #ff3a42;
+            transform: scale(1.1);
+        }
+
+        .item-carrinho .item-controles button:active {
+            transform: scale(0.95);
+        }
+
+        .item-carrinho .item-controles span {
+            min-width: 25px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 1.1rem;
+            color: var(--cor-texto-claro);
+        }
+
+        .total-carrinho {
+            font-size: 2rem;
+            font-weight: bold;
+            text-align: right;
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 3px solid var(--cor-secundaria-stark);
+            color: var(--cor-destaque-ui);
+            text-shadow: 0 0 8px rgba(0, 255, 255, 0.6);
+            position: relative;
+        }
+        .total-carrinho span {
+            display: inline-block;
+        }
+
+        .btn-finalizar {
+            background-color: var(--cor-secundaria-stark);
+            color: var(--cor-fundo-stark);
+            border: none;
+            padding: 1.2rem 1.8rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.3rem;
+            font-weight: bold;
+            width: 100%;
+            margin-top: 2rem;
+            transition: background-color 0.3s ease, transform 0.1s ease;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            animation: pulseArcReactor 2s infinite ease-in-out; /* Animação do botão */
+        }
+
+        .btn-finalizar:hover {
+            background-color: #ffeb3b;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.6);
+        }
+
+        .btn-finalizar:active {
+            transform: translateY(0);
+        }
+
+        /* Alerta JARVIS */
+        .jarvis-alert {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(0, 255, 255, 0.85); /* Ciano JARVIS */
+            color: var(--cor-fundo-stark);
+            padding: 15px 25px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 255, 255, 0.5);
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.1rem;
+            opacity: 0;
+            transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+            z-index: 1000;
+        }
+
+        .jarvis-alert.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(-20px);
+        }
+
+        /* Loader de Carregamento (JARVIS Boot) */
+        #loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--cor-fundo-stark);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.8s ease-out;
+            opacity: 1;
+        }
+
+        #loader.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .loader-arc-reactor {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            border: 6px solid var(--cor-secundaria-stark);
+            border-top-color: var(--cor-destaque-ui);
+            animation: spin 1.2s linear infinite, glowArcReactor 2s infinite alternate;
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .loader-arc-reactor::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 30px;
+            height: 30px;
+            background-color: var(--cor-destaque-ui);
+            border-radius: 50%;
+            box-shadow: 0 0 15px var(--cor-destaque-ui), 0 0 25px var(--cor-destaque-ui);
+        }
+
+        .loader-text {
+            color: var(--cor-destaque-ui);
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5rem;
+            text-shadow: 0 0 10px rgba(0, 255, 255, 0.7);
+            animation: pulseText 1.5s infinite alternate;
+        }
+
+
+        /* Animações CSS */
+        @keyframes fadeInHeader {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInRight {
+            from { opacity: 0; transform: translateX(50px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        @keyframes slideInItem {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        @keyframes pulseArcReactor {
+            0% { box-shadow: 0 0 8px var(--cor-secundaria-stark); }
+            50% { box-shadow: 0 0 20px var(--cor-secundaria-stark), 0 0 30px var(--cor-destaque-ui); }
+            100% { box-shadow: 0 0 8px var(--cor-secundaria-stark); }
+        }
+
+        @keyframes scanEffect {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes glowArcReactor {
+            0% { box-shadow: 0 0 10px var(--cor-destaque-ui), inset 0 0 10px var(--cor-destaque-ui); }
+            50% { box-shadow: 0 0 25px var(--cor-destaque-ui), inset 0 0 25px var(--cor-destaque-ui); }
+            100% { box-shadow: 0 0 10px var(--cor-destaque-ui), inset 0 0 10px var(--cor-destaque-ui); }
+        }
+
+        @keyframes pulseText {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.05); opacity: 0.8; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        /* Responsividade */
+        @media (max-width: 1024px) {
+            .container {
+                grid-template-columns: 2fr 1fr;
+                padding: 0 1rem;
+                gap: 1.5rem;
+            }
+            .secao-produtos h2, .carrinho h2 {
+                font-size: 1.8rem;
+            }
+            .produto-card img {
+                height: 180px;
+            }
+            .produto-info h3 {
+                font-size: 1.4rem;
+            }
+            .produto-preco {
+                font-size: 1.6rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                grid-template-columns: 1fr;
+                margin: 1.5rem auto;
+            }
+            .carrinho {
+                position: relative;
+                top: auto;
+                margin-top: 2rem;
+            }
+            header h1 {
+                font-size: 2.2rem;
+            }
+            .produto-card {
+                max-width: 380px;
+                margin: 0 auto;
+            }
+            .produtos-grid {
+                grid-template-columns: 1fr; /* Coluna única em mobile */
+            }
+        }
+
+        @media (max-width: 480px) {
+            header h1 {
+                font-size: 1.8rem;
+            }
+            header p {
+                font-size: 0.9rem;
+            }
+            .container {
+                padding: 0 0.8rem;
+            }
+            .secao-produtos, .carrinho {
+                padding: 1.5rem;
+            }
+            .btn-add-carrinho, .btn-finalizar {
+                font-size: 1rem;
+                padding: 0.8rem 1rem;
+            }
+            .total-carrinho {
+                font-size: 1.8rem;
+            }
+        }
+
+    </style>
+</head>
+<body>
+    <div id="loader">
+        <div class="loader-arc-reactor"></div>
+        <p class="loader-text">JARVIS: Inicializando sistemas...</p>
+    </div>
+
+    <header>
+        <h1>STARK GAMES</h1>
+        <p>Sua Armadura para a Aventura Virtual!</p>
+    </header>
+
+    <div class="container">
+        <section class="secao-produtos">
+            <h2>Nossos Títulos Mais Recentes</h2>
+            <div class="produtos-grid" id="produtos-grid">
+                </div>
+        </section>
+
+        <aside class="carrinho">
+            <h2>Seu Carrinho JARVIS</h2>
+            <ul id="lista-carrinho">
+                </ul>
+            <div class="total-carrinho">
+                Total: R$ <span id="total-carrinho">0.00</span>
+            </div>
+            <button class="btn-finalizar" onclick="finalizarCompra()">Finalizar Compra</button>
+        </aside>
+    </div>
+
+    <div id="jarvis-alert" class="jarvis-alert"></div>
+
+    <script>
+        const produtos = [
+            {
+                id: 1,
+                nome: 'Marvel\'s Spider-Man 2',
+                descricao: 'Balance-se por Nova York com Peter Parker e Miles Morales. Explore a cidade, enfrente vilões e salve o mundo neste épico jogo de super-heróis.',
+                preco: 349.99,
+                imagem: 'https://image.api.playstation.com/vulcan/ap/rnd/202306/1219/c7102604084f8841445b23e800c02506161474148b11c8a1.png'
+            },
+            {
+                id: 2,
+                nome: 'Marvel\'s Avengers',
+                descricao: 'Reúna os maiores heróis da Terra, domine habilidades extraordinárias, personalize uma vasta lista de heróis e defenda a Terra de ameaças crescentes.',
+                preco: 99.99,
+                imagem: 'https://image.api.playstation.com/vulcan/img/rnd/202010/0613/gE7s9t3Fk2Y64jC2M8P7p0b3.png'
+            },
+            {
+                id: 3,
+                nome: 'Marvel\'s Guardians of the Galaxy',
+                descricao: 'Lidere os desajustados Guardiões em uma aventura cósmica, enquanto você tenta salvar o universo em meio a caos e muito bom humor.',
+                preco: 159.99,
+                imagem: 'https://image.api.playstation.com/vulcan/ap/rnd/202106/0709/nS270T0gqX76M9xHk505v0v3.png'
+            },
+            {
+                id: 4,
+                nome: 'LEGO Marvel Super Heroes',
+                descricao: 'Junte-se aos seus heróis e vilões favoritos da Marvel em uma aventura LEGO repleta de ação e humor. Desbloqueie mais de 100 personagens!',
+                preco: 79.99,
+                imagem: 'https://upload.wikimedia.org/wikipedia/en/thumb/e/ef/LEGO_Marvel_Super_Heroes_cover.jpg/220px-LEGO_Marvel_Super_Heroes_cover.jpg'
+            },
+            {
+                id: 5,
+                nome: 'Marvel Ultimate Alliance 3: The Black Order',
+                descricao: 'Monte sua equipe definitiva de super-heróis da Marvel para impedir que Thanos e a Ordem Negra destruam o universo.',
+                preco: 229.99,
+                imagem: 'https://upload.wikimedia.org/wikipedia/en/thumb/f/f6/Marvel_Ultimate_Alliance_3_cover_art.jpg/220px-Marvel_Ultimate_Alliance_3_cover_art.jpg'
+            },
+            {
+                id: 6,
+                nome: 'Hulk: Ultimate Destruction',
+                descricao: 'Assuma o controle do Incrível Hulk e esmague tudo em seu caminho neste clássico de ação e destruição.',
+                preco: 59.99,
+                imagem: 'https://upload.wikimedia.org/wikipedia/en/thumb/0/07/Hulk_Ultimate_Destruction_cover.jpg/220px-Hulk_Ultimate_Destruction_cover.jpg'
+            },
+        ];
+
+        const produtosGrid = document.getElementById('produtos-grid');
+        const listaCarrinho = document.getElementById('lista-carrinho');
+        const totalCarrinhoSpan = document.getElementById('total-carrinho');
+        const jarvisAlert = document.getElementById('jarvis-alert');
+        const loader = document.getElementById('loader');
+
+        let carrinho = JSON.parse(localStorage.getItem('carrinhoStarkGames')) || [];
+
+        // Animação de carregamento inicial (JARVIS Boot)
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                loader.classList.add('hidden');
+                document.body.style.overflow = 'auto'; /* Habilita scroll após o carregamento */
+            }, 1500); // Exibe o loader por 1.5 segundos
+        });
+
+        // Função para renderizar os produtos na tela
+        function renderizarProdutos() {
+            produtosGrid.innerHTML = '';
+            produtos.forEach(produto => {
+                const produtoCard = `
+                    <div class="produto-card">
+                        <img src="${produto.imagem}" alt="${produto.nome}">
+                        <div class="produto-info">
+                            <h3>${produto.nome}</h3>
+                            <p>${produto.descricao}</p>
+                            <span class="produto-preco">R$ ${produto.preco.toFixed(2)}</span>
+                            <button class="btn-add-carrinho" onclick="adicionarAoCarrinho(${produto.id}, event)">Adicionar ao Carrinho</button>
+                        </div>
+                    </div>
+                `;
+                produtosGrid.innerHTML += produtoCard;
+            });
+        }
+
+        // Função para exibir alerta JARVIS
+        function showJarvisAlert(message) {
+            jarvisAlert.textContent = `JARVIS: ${message}`;
+            jarvisAlert.classList.add('show');
+            setTimeout(() => {
+                jarvisAlert.classList.remove('show');
+            }, 3000); // O alerta desaparece após 3 segundos
+        }
+
+        // Animação de contagem para o total do carrinho
+        function animateValue(obj, start, end, duration) {
+            let startTimestamp = null;
+            const step = (timestamp) => {
+                if (!startTimestamp) startTimestamp = timestamp;
+                const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                obj.textContent = (start + progress * (end - start)).toFixed(2);
+                if (progress < 1) {
+                    window.requestAnimationFrame(step);
+                }
+            };
+            window.requestAnimationFrame(step);
+        }
+
+        // Função para adicionar produto ao carrinho com animação
+        function adicionarAoCarrinho(produtoId, event) {
+            const produtoExistente = carrinho.find(item => item.id === produtoId);
+            const produto = produtos.find(p => p.id === produtoId);
+
+            if (produtoExistente) {
+                produtoExistente.quantidade++;
+                showJarvisAlert(`"${produto.nome}" (x${produtoExistente.quantidade}) - Quantidade atualizada.`);
+            } else {
+                if (produto) {
+                    carrinho.push({ ...produto, quantidade: 1 });
+                    showJarvisAlert(`"${produto.nome}" adicionado ao carrinho.`);
+                }
+            }
+            salvarCarrinhoLocal();
+            renderizarCarrinho();
+
+            // Efeito de "scan" no botão
+            const button = event.target;
+            button.style.background = `linear-gradient(90deg, ${varColor('--cor-primaria-stark')} 0%, ${varColor('--cor-destaque-ui')} 50%, ${varColor('--cor-primaria-stark')} 100%)`;
+            button.style.backgroundSize = '200% 100%';
+            button.style.animation = 'scanEffect 0.8s forwards';
+
+            setTimeout(() => {
+                button.style.background = varColor('--cor-primaria-stark');
+                button.style.animation = 'none';
+                button.style.backgroundPosition = '0% 0';
+            }, 800);
+        }
+
+        // Função auxiliar para pegar variáveis CSS
+        function varColor(variable) {
+            return getComputedStyle(document.documentElement).getPropertyValue(variable).trim();
+        }
+
+
+        // Função para remover item do carrinho
+        function removerDoCarrinho(produtoId) {
+            const produtoRemovido = carrinho.find(item => item.id === produtoId);
+            carrinho = carrinho.filter(item => item.id !== produtoId);
+            salvarCarrinhoLocal();
+            renderizarCarrinho();
+            if (produtoRemovido) {
+                showJarvisAlert(`"${produtoRemovido.nome}" removido do carrinho.`);
+            }
+        }
+
+        // Função para atualizar quantidade do item no carrinho
+        function atualizarQuantidade(produtoId, delta) {
+            const item = carrinho.find(item => item.id === produtoId);
+            if (item) {
+                item.quantidade += delta;
+                if (item.quantidade <= 0) {
+                    removerDoCarrinho(produtoId);
+                } else {
+                    salvarCarrinhoLocal();
+                    renderizarCarrinho();
+                    showJarvisAlert(`Quant. de "${item.nome}" para ${item.quantidade}.`);
+                }
+            }
+        }
+
+        // Função para renderizar o carrinho
+        function renderizarCarrinho() {
+            listaCarrinho.innerHTML = '';
+            let totalAtual = parseFloat(totalCarrinhoSpan.textContent);
+            let novoTotal = 0;
+
+            if (carrinho.length === 0) {
+                listaCarrinho.innerHTML = '<li style="text-align: center; color: var(--cor-borda-tecnologica); padding: 1rem 0;">JARVIS: Nenhum item detectado no carrinho.</li>';
+            } else {
+                carrinho.forEach((item, index) => {
+                    const itemElement = document.createElement('li');
+                    itemElement.className = 'item-carrinho';
+                    itemElement.innerHTML = `
+                        <div class="item-info">
+                            <span class="item-nome">${item.nome}</span>
+                            <span class="item-preco-unitario">R$ ${item.preco.toFixed(2)} cada</span>
+                        </div>
+                        <div class="item-controles">
+                            <button onclick="atualizarQuantidade(${item.id}, -1)">-</button>
+                            <span>${item.quantidade}</span>
+                            <button onclick="atualizarQuantidade(${item.id}, 1)">+</button>
+                            <button style="background-color: var(--cor-erro);" onclick="removerDoCarrinho(${item.id})">X</button>
+                        </div>
+                    `;
+                    // Adiciona um pequeno delay para a animação de cada item
+                    itemElement.style.animationDelay = `${index * 0.05}s`;
+                    listaCarrinho.appendChild(itemElement);
+                    novoTotal += item.preco * item.quantidade;
+                });
+            }
+            // Anima o valor total
+            animateValue(totalCarrinhoSpan, totalAtual, novoTotal, 500);
+        }
+
+        // Salvar o carrinho no Local Storage
+        function salvarCarrinhoLocal() {
+            localStorage.setItem('carrinhoStarkGames', JSON.stringify(carrinho));
+        }
+
+        // Função para finalizar compra
+        function finalizarCompra() {
+            if (carrinho.length === 0) {
+                alert('JARVIS: Nenhum produto detectado para transação, Gabriel. Adicione itens antes de prosseguir.');
+                return;
+            }
+            const total = parseFloat(totalCarrinhoSpan.textContent);
+            alert(`JARVIS: Transação no valor de R$ ${total.toFixed(2)} iniciada. Agradecemos sua preferência, Gabriel.`);
+            carrinho = []; // Limpa o carrinho
+            salvarCarrinhoLocal();
+            renderizarCarrinho();
+        }
+
+        // Inicialização
+        document.addEventListener('DOMContentLoaded', () => {
+            renderizarProdutos();
+            renderizarCarrinho();
+        });
+    </script>
+</body>
+</html>
